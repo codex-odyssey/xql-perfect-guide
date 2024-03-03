@@ -1,0 +1,71 @@
+x-default-policy: &default_policy
+  restart: unless-stopped
+  networks:
+    - xql-perfect-guide
+
+services:
+  grafana:
+    <<: *default_policy
+    container_name: grafana
+    image: grafana/grafana
+    volumes:
+      - ./grafana:/etc/grafana/provisioning/datasources
+    environment:
+      - GF_SECURITY_ADMIN=${GRAFANA_USERNAME}
+      - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_PASSWORD}
+    ports:
+      - 3000:3000
+    depends_on:
+      - prometheus
+      - loki
+      - promtail
+      # - tempo
+  prometheus:
+    <<: *default_policy
+    container_name: prometheus
+    image: prom/prometheus
+    command:
+      - "--config.file=/etc/prometheus/prometheus.yml"
+    volumes:
+      - ./prometheus:/etc/prometheus
+      - prom_data:/prometheus
+    ports:
+      - 9090:9090
+  loki:
+    <<: *default_policy
+    container_name: loki
+    image: grafana/loki
+    command: "-config.file=/etc/loki/loki.yaml"
+    volumes:
+      - ./loki/loki.yaml:/etc/loki/loki.yaml
+    ports:
+      - 3100:3100
+      - 7946
+      - 9095
+  promtail:
+    <<: *default_policy
+    container_name: promtail
+    image: grafana/promtail
+    command: "-config.file=/etc/promtail/promtail.yaml"
+    volumes:
+      - ./promtail:/etc/promtail/
+      - /var/run/docker.sock:/var/run/docker.sock
+  tempo:
+    <<: *default_policy
+    container_name: tempo
+    image: grafana/tempo
+    command: "-config.file=/etc/tempo.yaml"
+    volumes:
+      - ./tempo/tempo.yaml:/etc/tempo.yaml
+    ports:
+      - 14268:14268 # jaeger ingest
+      - 3200:3200 # tempo
+      - 9095:9095 # tempo grpc
+      - 4317:4317 # otlp grpc
+      - 4318:4318 # otlp http
+      - 9411:9411 # zipkin
+
+networks:
+  xql-perfect-guide:
+volumes:
+  prom_data:
