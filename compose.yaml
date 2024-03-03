@@ -19,7 +19,7 @@ services:
       - prometheus
       - loki
       - promtail
-      # - tempo
+      - tempo
   prometheus:
     <<: *default_policy
     container_name: prometheus
