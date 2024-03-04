@@ -4,6 +4,21 @@ x-default-policy: &default_policy
     - xql-perfect-guide
 
 services:
+  app:
+    <<: *default_policy
+    build:
+      context: ./app
+      dockerfile: Dockerfile
+    environment:
+      TRACE_BACKEND_ADDRESS: tempo:4317
+    ports:
+      - "8080:8080"
+    depends_on:
+      - tempo
+    develop:
+      watch:
+        - action: rebuild
+          path: app/
   grafana:
     <<: *default_policy
     container_name: grafana
