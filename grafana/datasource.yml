@@ -12,6 +12,16 @@ datasources:
     url: http://loki:3100
     access: proxy
     editable: true
+    jsonData:
+      httpHeaderName1: "X-Scope-OrgID"
+      derivedFields:
+      - datasourceUid: Tempo
+        matcherRegex: '"trace_id":"(\w+)"'
+        name: trace_id
+        url: '$${__value.raw}'
+        urlDisplayLabel: 'Tempo' 
+    secureJsonData:
+      httpHeaderValue1: "tenant1"   
   - name: Tempo
     type: tempo
     url: http://tempo:3200

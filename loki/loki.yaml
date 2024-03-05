@@ -30,3 +30,6 @@ ruler:
   storage:
     s3:
       bucketnames: loki-ruler
+
+limits_config:
+    unordered_writes: false    

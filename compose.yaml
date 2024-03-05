@@ -10,6 +10,9 @@ services:
       context: ./app
       dockerfile: Dockerfile
     environment:
+      LOG_LEVEL: info
+      APP_VERSION: v1.0.0
+      SERVICE_NAME: XQL-PERFECT-GUIDE-APP
       TRACE_BACKEND_ADDRESS: tempo:4317
     ports:
       - "8080:8080"
@@ -79,6 +82,21 @@ services:
       - 4317:4317 # otlp grpc
       - 4318:4318 # otlp http
       - 9411:9411 # zipkin
+  minio:
+    <<: *default_policy
+    container_name: minio
+    image: minio/minio
+    restart: unless-stopped
+    entrypoint: sh
+    # command: -c 'mkdir -p /export/loki && /usr/bin/minio server /export'
+    command: -c '/usr/bin/minio server /export'
+    environment:
+      - MINIO_ACCESS_KEY=loki
+      - MINIO_SECRET_KEY=supersecret
+    volumes:
+      - ./data/minio:/export
+    ports:
+      - 9000:9000      
 
 networks:
   xql-perfect-guide:
