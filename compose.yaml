@@ -46,6 +46,7 @@ services:
     image: prom/prometheus
     command:
       - "--config.file=/etc/prometheus/prometheus.yml"
+      - "--enable-feature=exemplar-storage"
     volumes:
       - ./prometheus:/etc/prometheus
       - prom_data:/prometheus

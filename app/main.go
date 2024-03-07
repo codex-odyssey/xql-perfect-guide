@@ -13,6 +13,7 @@ import (
 	"go.opentelemetry.io/otel/trace"
 
 	logging "app/internal/log"
+	"app/internal/metrics"
 	tracing "app/internal/trace"
 )
 
@@ -33,11 +34,13 @@ func main() {
 	r := gin.New()
 	r.Use(
 		otelgin.Middleware("xql-sample-app"),
+		metrics.PrometheusMiddleware(),
 	)
 
 	r.GET("/", Handler)
 	r.GET("/log", HandlerLog)
 	r.GET("/karubikuppa", HandlerKarubikuppa)
+	r.GET("/metrics", metrics.PrometheusHandler())
 	r.Run(":8080")
 	log.Printf("Start Server")
 }

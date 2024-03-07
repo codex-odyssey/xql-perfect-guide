@@ -3,6 +3,7 @@ package logging
 import (
 	"context"
 
+	"app/internal/constant"
 	"app/internal/utils"
 
 	"go.opentelemetry.io/otel/trace"
@@ -12,7 +13,7 @@ import (
 
 const (
 	logLevelEnv = "LOG_LEVEL"
-	traceKey    = "trace_id"
+	traceKey    = constant.TrackID
 	spanKey     = "span_id"
 )
 
