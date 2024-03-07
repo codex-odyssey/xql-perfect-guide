@@ -42,7 +42,8 @@ func InitTracer() (*sdktrace.TracerProvider, error) {
 
 	res, err := resource.New(ctx,
 		resource.WithAttributes(
-			semconv.ServiceNameKey.String("xql-sample-app"),
+			// LogQLのcontainerタグにひも付けるため、コンテナ名と同じにする必要がある
+			semconv.ServiceNameKey.String("xql-sample-app-v1"),
 		),
 	)
 	if err != nil {

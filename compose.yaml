@@ -6,6 +6,8 @@ x-default-policy: &default_policy
 services:
   app:
     <<: *default_policy
+    # LogQLでcontainerタグにする
+    container_name: xql-sample-app-v1
     build:
       context: ./app
       dockerfile: Dockerfile
@@ -96,7 +98,7 @@ services:
     volumes:
       - ./data/minio:/export
     ports:
-      - 9000:9000      
+      - 9000:9000
 
 networks:
   xql-perfect-guide:

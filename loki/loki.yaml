@@ -32,4 +32,4 @@ ruler:
       bucketnames: loki-ruler
 
 limits_config:
-    unordered_writes: false    
+    unordered_writes: false
