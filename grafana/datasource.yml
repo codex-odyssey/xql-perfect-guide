@@ -7,6 +7,11 @@ datasources:
     isDefault: true
     access: proxy
     editable: true
+    jsonData:
+      timeInterval: 15s
+      exemplarTraceIdDestinations:
+      - name: trace_id
+        datasourceUid: Tempo
   - name: Loki
     type: loki
     url: http://loki:3100

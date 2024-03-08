@@ -1,6 +1,7 @@
 package metrics
 
 import (
+	"app/internal/constant"
 	"context"
 	"time"
 
@@ -8,8 +9,6 @@ import (
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"go.opentelemetry.io/otel/trace"
-
-	"app/internal/constant"
 )
 
 const (
