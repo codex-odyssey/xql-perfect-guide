@@ -32,8 +32,15 @@ func main() {
 	}()
 
 	r := gin.New()
+	excludePaths := map[string]bool{
+		"/metrics": true,
+	}
 	r.Use(
-		otelgin.Middleware("xql-sample-app"),
+		func(c *gin.Context) {
+			if !excludePaths[c.Request.URL.Path] {
+				otelgin.Middleware("xql-sample-app")(c)
+			}
+		},
 		metrics.PrometheusMiddleware(),
 	)
 
