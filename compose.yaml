@@ -15,11 +15,12 @@ services:
       LOG_LEVEL: info
       APP_VERSION: v1.0.0
       SERVICE_NAME: XQL-PERFECT-GUIDE-APP
-      TRACE_BACKEND_ADDRESS: tempo:4317
+      TRACE_BACKEND_ADDRESS: otel-collector:4317
     ports:
       - "8080:8080"
     depends_on:
       - tempo
+      - otel-collector
     develop:
       watch:
         - action: rebuild
@@ -79,12 +80,8 @@ services:
     volumes:
       - ./tempo/tempo.yaml:/etc/tempo.yaml
     ports:
-      - 14268:14268 # jaeger ingest
-      - 3200:3200 # tempo
-      - 9095:9095 # tempo grpc
-      - 4317:4317 # otlp grpc
-      - 4318:4318 # otlp http
-      - 9411:9411 # zipkin
+      - "4317"  # otlp grpc
+      - "4318"  # otlp http
   minio:
     <<: *default_policy
     container_name: minio
@@ -100,6 +97,24 @@ services:
       - ./data/minio:/export
     ports:
       - 9000:9000
+  otel-collector:
+    <<: *default_policy  
+    container_name: otel-collector
+    image: otel/opentelemetry-collector-contrib
+    restart: always
+    command: ["--config=/etc/otel-collector-config.yaml", "${OTELCOL_ARGS}"]
+    volumes:
+      - ./otel-collector/otel-collector-config.yaml:/etc/otel-collector-config.yaml
+    ports:
+      - "1888:1888"   # pprof extension
+      - "8888:8888"   # Prometheus metrics exposed by the collector
+      - "8889:8889"   # Prometheus exporter metrics
+      - "13133:13133" # health_check extension
+      - "4317:4317"   # OTLP gRPC receiver
+      - "4318:4318"   # OTLP HTTP receiver
+      - "55679:55679" # zpages extension      
+    depends_on:
+      - tempo      
 
 networks:
   xql-perfect-guide:
