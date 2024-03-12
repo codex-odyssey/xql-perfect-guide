@@ -31,11 +31,11 @@ services:
     container_name: chef-service
     build:
       context: ./chef-service
-      dockerfile: Dockerfile    
+      dockerfile: Dockerfile
     environment:
       CHEF_SERIVCE_HOST: "0.0.0.0"
       CHEF_SERIVCE_PORT: 8090
-      CHEF_SERVICE_DB_USER: "root" 
+      CHEF_SERVICE_DB_USER: "root"
       CHEF_SERVICE_DB_PASSWORD: "password"
       CHEF_SERVICE_DB_HOST: "mysql-chef-service"
       CHEF_SERVICE_DB_NAME: "chef"
@@ -54,16 +54,16 @@ services:
     develop:
       watch:
         - action: rebuild
-          path: chef-service/       
+          path: chef-service/
   mysql-chef-service:
-    <<: *default_policy  
+    <<: *default_policy
     container_name: mysql-chef-service
     image: mysql:8.0
     environment:
       MYSQL_ROOT_PASSWORD: password
       MYSQL_DATABASE: chef
       MYSQL_USER: chefs
-      MYSQL_PASSWORD: password  
+      MYSQL_PASSWORD: password
     ports:
       - "3306:3306"
     volumes:
@@ -142,7 +142,7 @@ services:
     ports:
       - 9000:9000
   otel-collector:
-    <<: *default_policy  
+    <<: *default_policy
     container_name: otel-collector
     image: otel/opentelemetry-collector-contrib
     restart: always
@@ -156,9 +156,9 @@ services:
       - "13133:13133" # health_check extension
       - "4317:4317"   # OTLP gRPC receiver
       - "4318:4318"   # OTLP HTTP receiver
-      - "55679:55679" # zpages extension      
+      - "55679:55679" # zpages extension
     depends_on:
-      - tempo      
+      - tempo
 
 networks:
   xql-perfect-guide:
