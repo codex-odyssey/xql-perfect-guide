@@ -25,6 +25,50 @@ services:
       watch:
         - action: rebuild
           path: app/
+
+  chef-service:
+    <<: *default_policy
+    container_name: chef-service
+    build:
+      context: ./chef-service
+      dockerfile: Dockerfile    
+    environment:
+      CHEF_SERIVCE_HOST: "0.0.0.0"
+      CHEF_SERIVCE_PORT: 8090
+      CHEF_SERVICE_DB_USER: "root" 
+      CHEF_SERVICE_DB_PASSWORD: "password"
+      CHEF_SERVICE_DB_HOST: "mysql-chef-service"
+      CHEF_SERVICE_DB_NAME: "chef"
+      CHEF_SERVICE_DB_PORT: "3306"
+      OTEL_SERVICE_NAME: CHEF-SERVICE
+      OTEL_TRACES_EXPORTER: otlp
+      OTEL_EXPORTER_OTLP_PROTOCOL: grpc
+      OTEL_EXPORTER_OTLP_ENDPOINT: otel-collector:4317
+      OTEL_EXPORTER_OTLP_INSECURE: True
+    ports:
+      - "8090:8090"
+    depends_on:
+      - tempo
+      - otel-collector
+      - mysql-chef-service
+    develop:
+      watch:
+        - action: rebuild
+          path: chef-service/       
+  mysql-chef-service:
+    <<: *default_policy  
+    container_name: mysql-chef-service
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: chef
+      MYSQL_USER: chefs
+      MYSQL_PASSWORD: password  
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./chef-service/assets/init.sql:/docker-entrypoint-initdb.d/init.sql
+
   grafana:
     <<: *default_policy
     container_name: grafana

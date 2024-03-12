@@ -1,1 +1,8 @@
 /data
+
+# chef_service
+/chef-service/__pycache__/*
+/chef-service/bin/*
+/chef-service/lib/*
+/chef-service/include/*
+/chef-service/pyvenv.cfg

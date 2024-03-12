@@ -2,12 +2,15 @@ package main
 
 import (
 	"context"
+	"io"
 	"log"
 	"net/http"
+	"net/url"
 	"time"
 
 	"github.com/gin-gonic/gin"
 	"go.opentelemetry.io/contrib/instrumentation/github.com/gin-gonic/gin/otelgin"
+	"go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp"
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/attribute"
 	"go.opentelemetry.io/otel/trace"
@@ -107,5 +110,27 @@ func HandlerKarubikuppa(c *gin.Context) {
 		defer span.End()
 	}()
 
-	c.String(http.StatusOK, "dekita!!")
+	// temporary
+	serverURL := "http://chef-service:8090/chef"
+	params := url.Values{}
+	params.Add("dish_name", "karubikuppa")
+	req, err := http.NewRequestWithContext(ctx, "GET", serverURL+"?"+params.Encode(), nil)
+	if err != nil {
+		log.Fatal("NewRequest: ", err)
+		return
+	}
+	client := http.Client{Transport: otelhttp.NewTransport(http.DefaultTransport)}
+	resp, err := client.Do(req)
+	if err != nil {
+		log.Fatal("Do: ", err)
+		return
+	}
+	defer resp.Body.Close()
+	body, err := io.ReadAll(resp.Body)
+	if err != nil {
+		log.Fatal("ReadAll: ", err)
+		return
+	}
+
+	c.String(http.StatusOK, string(body)+"秒で dekita!!")
 }
