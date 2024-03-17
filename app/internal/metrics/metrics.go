@@ -115,15 +115,13 @@ func PrometheusMiddleware() gin.HandlerFunc {
 	}
 }
 
-func PrometheusHandler() gin.HandlerFunc {
-	return func(c *gin.Context) {
-		h := promhttp.InstrumentMetricHandler(
-			prometheus.DefaultRegisterer,
-			promhttp.HandlerFor(
-				prometheus.DefaultGatherer,
-				promhttp.HandlerOpts{EnableOpenMetrics: true},
-			),
-		)
-		h.ServeHTTP(c.Writer, c.Request)
-	}
+func HandlerMetrics(c *gin.Context) {
+	h := promhttp.InstrumentMetricHandler(
+		prometheus.DefaultRegisterer,
+		promhttp.HandlerFor(
+			prometheus.DefaultGatherer,
+			promhttp.HandlerOpts{EnableOpenMetrics: true},
+		),
+	)
+	h.ServeHTTP(c.Writer, c.Request)
 }

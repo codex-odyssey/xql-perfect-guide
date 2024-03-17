@@ -17,6 +17,7 @@ import (
 
 	logging "app/internal/log"
 	"app/internal/metrics"
+	"app/internal/questions"
 	tracing "app/internal/trace"
 )
 
@@ -48,27 +49,14 @@ func main() {
 	)
 
 	r.GET("/", Handler)
-	r.GET("/log", HandlerLog)
+	r.GET("/log", questions.HandlerLogQ)
 	r.GET("/karubikuppa", HandlerKarubikuppa)
-	r.GET("/metrics", metrics.PrometheusHandler())
+	r.GET("/metrics", metrics.HandlerMetrics)
 	r.Run(":8080")
 	log.Printf("Start Server")
 }
 
 func Handler(c *gin.Context) {
-	c.String(http.StatusOK, "ok")
-}
-
-func HandlerLog(c *gin.Context) {
-	ctx := c.Request.Context()
-	logger := logging.GetLoggerFromCtx(ctx)
-
-	logger.Infoln("foo")
-	logger.Infoln("var")
-	logger.Infoln("foo")
-	logger.Infoln("var")
-	logger.Infoln("var")
-	logger.Infoln("foo")
 	c.String(http.StatusOK, "ok")
 }
 

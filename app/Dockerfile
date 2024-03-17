@@ -7,7 +7,9 @@ RUN --mount=type=cache,target=/go/pkg/mod \
     go mod download
 
 COPY --link . .
-RUN CGO_ENABLED=0 GOOS=linux go build -o xql-sample-app
+RUN --mount=type=cache,target=/go/pkg/mod \
+    --mount=type=cache,target=/root/.cache/go-build \
+    CGO_ENABLED=0 GOOS=linux go build -o xql-sample-app
 
 FROM alpine:3.18
 RUN apk --no-cache add ca-certificates
