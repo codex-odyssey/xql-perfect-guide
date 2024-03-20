@@ -1,8 +1,15 @@
 /data
 
-# chef_service
+# chef-service
 /chef-service/__pycache__/*
 /chef-service/bin/*
 /chef-service/lib/*
 /chef-service/include/*
 /chef-service/pyvenv.cfg
+
+# bbb-service
+/bbb-service/__pycache__/*
+/bbb-service/bin/*
+/bbb-service/lib/*
+/bbb-service/include/*
+/bbb-service/pyvenv.cfg

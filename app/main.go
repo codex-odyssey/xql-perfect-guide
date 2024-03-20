@@ -99,26 +99,36 @@ func HandlerKarubikuppa(c *gin.Context) {
 	}()
 
 	// temporary
-	serverURL := "http://chef-service:8090/chef"
+	chefServiceURL := "http://chef-service:8090/chef"
+	bbbServiceURL := "http://bbb-service:8091/bbb"
+	chefResponse := sendRequest(ctx, chefServiceURL, "karubikuppa")
+	bbbResponse := sendRequest(ctx, bbbServiceURL, "karubikuppa")
+
+	c.String(http.StatusOK, string(chefResponse)+" 秒で完成します。BBB流評価は星"+string(bbbResponse)+"です。")
+}
+
+func sendRequest(ctx context.Context, serviceURL string, dishName string) string {
 	params := url.Values{}
-	params.Add("dish_name", "karubikuppa")
-	req, err := http.NewRequestWithContext(ctx, "GET", serverURL+"?"+params.Encode(), nil)
+	params.Add("dish_name", dishName)
+	req, err := http.NewRequestWithContext(ctx, "GET", serviceURL+"?"+params.Encode(), nil)
 	if err != nil {
 		log.Fatal("NewRequest: ", err)
-		return
+		return ""
 	}
+
 	client := http.Client{Transport: otelhttp.NewTransport(http.DefaultTransport)}
 	resp, err := client.Do(req)
 	if err != nil {
 		log.Fatal("Do: ", err)
-		return
+		return ""
 	}
 	defer resp.Body.Close()
+
 	body, err := io.ReadAll(resp.Body)
 	if err != nil {
 		log.Fatal("ReadAll: ", err)
-		return
+		return ""
 	}
 
-	c.String(http.StatusOK, string(body)+"秒で dekita!!")
+	return string(body)
 }
