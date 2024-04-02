@@ -4,17 +4,17 @@ x-default-policy: &default_policy
     - xql-perfect-guide
 
 services:
-  app:
+  waiter-service:
     <<: *default_policy
     # LogQLでcontainerタグにする
-    container_name: xql-sample-app-v1
+    container_name: waiter-service
     build:
       context: ./app
       dockerfile: Dockerfile
     environment:
       LOG_LEVEL: info
       APP_VERSION: v1.0.0
-      SERVICE_NAME: XQL-PERFECT-GUIDE-APP
+      SERVICE_NAME: WAITER-SERVICE
       TRACE_BACKEND_ADDRESS: otel-collector:4317
     ports:
       - "8080:8080"
@@ -115,12 +115,14 @@ services:
   grafana:
     <<: *default_policy
     container_name: grafana
-    image: grafana/grafana
+    image: grafana/grafana:10.4.1
     volumes:
       - ./grafana:/etc/grafana/provisioning/datasources
     environment:
       - GF_SECURITY_ADMIN=${GRAFANA_USERNAME}
       - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_PASSWORD}
+      - GF_AUTH_ANONYMOUS_ENABLED=true
+      - GF_AUTH_ANONYMOUS_ORG_ROLE=Admin      
     ports:
       - 3000:3000
     depends_on:
@@ -162,7 +164,7 @@ services:
   tempo:
     <<: *default_policy
     container_name: tempo
-    image: grafana/tempo
+    image: grafana/tempo:2.4.1
     command: "-config.file=/etc/tempo.yaml"
     volumes:
       - ./tempo/tempo.yaml:/etc/tempo.yaml
@@ -202,6 +204,23 @@ services:
       - "55679:55679" # zpages extension
     depends_on:
       - tempo
+
+  load-generator:
+    container_name: load-generator
+    <<: *default_policy  
+    build:
+      context: ./load-generator
+      dockerfile: Dockerfile
+    environment:
+      - LOCUST_HOST=http://waiter-service:8080
+    depends_on:
+      - waiter-service
+      - chef-service
+      - bbb-service
+    develop:
+      watch:
+        - action: rebuild
+          path: load-generator/      
 
 networks:
   xql-perfect-guide:

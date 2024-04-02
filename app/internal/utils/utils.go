@@ -1,6 +1,8 @@
 package utils
 
-import "os"
+import (
+	"os"
+)
 
 const (
 	AppVersionEnv  = "APP_VERSION"

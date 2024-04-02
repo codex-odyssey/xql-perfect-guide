@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"os"
+	"time"
 
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/exporters/otlp/otlptrace/otlptracegrpc"
@@ -11,8 +12,11 @@ import (
 	"go.opentelemetry.io/otel/sdk/resource"
 	sdktrace "go.opentelemetry.io/otel/sdk/trace"
 	semconv "go.opentelemetry.io/otel/semconv/v1.4.0"
+	"go.uber.org/zap"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
+
+	logging "app/internal/log"
 )
 
 const (
@@ -63,4 +67,14 @@ func InitTracer() (*sdktrace.TracerProvider, error) {
 	))
 
 	return tp, nil
+}
+
+var tracer = otel.GetTracerProvider().Tracer("")
+
+func CreateTrace(ctx context.Context, sleep int, step string, logger *zap.SugaredLogger) {
+	ctx, span := tracer.Start(ctx, step)
+	logger = logging.WithTrace(ctx, logger)
+	logger.Infoln(step)
+	time.Sleep(time.Duration(sleep) * time.Millisecond)
+	defer span.End()
 }

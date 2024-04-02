@@ -8,4 +8,10 @@ CREATE TABLE IF NOT EXISTS bbb_evaluation (
 );
 
 INSERT INTO bbb_evaluation (dish_name, bbb_evaluation) VALUES
-('karubikuppa', 4);
+('karubikuppa', 5),
+('curry', 4),
+('spaghetti', 3),
+('meuniere', 4),
+('sandwich', 3),
+('salad', 1),
+('smoothie', 2);

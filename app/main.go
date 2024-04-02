@@ -2,26 +2,17 @@ package main
 
 import (
 	"context"
-	"io"
 	"log"
 	"net/http"
-	"net/url"
-	"time"
 
 	"github.com/gin-gonic/gin"
 	"go.opentelemetry.io/contrib/instrumentation/github.com/gin-gonic/gin/otelgin"
-	"go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp"
-	"go.opentelemetry.io/otel"
-	"go.opentelemetry.io/otel/attribute"
-	"go.opentelemetry.io/otel/trace"
 
-	logging "app/internal/log"
 	"app/internal/metrics"
 	"app/internal/questions"
+	recipe "app/internal/recipe"
 	tracing "app/internal/trace"
 )
-
-var tracer = otel.GetTracerProvider().Tracer("")
 
 func main() {
 	// Start Tracing
@@ -50,7 +41,16 @@ func main() {
 
 	r.GET("/", Handler)
 	r.GET("/log", questions.HandlerLogQ)
-	r.GET("/karubikuppa", HandlerKarubikuppa)
+
+	// === Recipe
+	r.GET("/karubikuppa", recipe.Karubikuppa)
+	r.GET("/curry", recipe.Curry)
+	r.GET("/spaghetti", recipe.Spaghetti)
+	r.GET("/meuniere", recipe.Meuniere)
+	r.GET("/sandwich", recipe.Sandwich)
+	r.GET("/salad", recipe.Salad)
+	r.GET("/smoothie", recipe.Smoothie)
+
 	r.GET("/metrics", metrics.HandlerMetrics)
 	r.Run(":8080")
 	log.Printf("Start Server")
@@ -58,77 +58,4 @@ func main() {
 
 func Handler(c *gin.Context) {
 	c.String(http.StatusOK, "ok")
-}
-
-func HandlerKarubikuppa(c *gin.Context) {
-	ctx := c.Request.Context()
-	logger := logging.GetLoggerWithTraceID(ctx)
-
-	func() {
-		ctx, span := tracer.Start(ctx, "食材を準備する", trace.WithAttributes(
-			attribute.String("カルビ", "たくさん"),
-			attribute.String("コチュジャン", "いっぱい"),
-			attribute.String("ごま油", "できるだけ多く"),
-		))
-		logger := logging.WithTrace(ctx, logger)
-		logger.Infoln("食材を準備する")
-		defer span.End()
-	}()
-
-	func() {
-		ctx, span := tracer.Start(ctx, "カルビを炒める")
-		logger := logging.WithTrace(ctx, logger)
-		logger.Infoln("カルビを炒める")
-		time.Sleep(1 * time.Second)
-		defer span.End()
-	}()
-
-	func() {
-		ctx, span := tracer.Start(ctx, "カルビクッパを煮込む")
-		logger := logging.WithTrace(ctx, logger)
-		logger.Infoln("カルビクッパを煮込む")
-		time.Sleep(3 * time.Second)
-		defer span.End()
-	}()
-
-	func() {
-		ctx, span := tracer.Start(ctx, "ごま油を入れる")
-		logger := logging.WithTrace(ctx, logger)
-		logger.Infoln("ごま油を入れる")
-		defer span.End()
-	}()
-
-	// temporary
-	chefServiceURL := "http://chef-service:8090/chef"
-	bbbServiceURL := "http://bbb-service:8091/bbb"
-	chefResponse := sendRequest(ctx, chefServiceURL, "karubikuppa")
-	bbbResponse := sendRequest(ctx, bbbServiceURL, "karubikuppa")
-
-	c.String(http.StatusOK, string(chefResponse)+" 秒で完成します。BBB流評価は星"+string(bbbResponse)+"です。")
-}
-
-func sendRequest(ctx context.Context, serviceURL string, dishName string) string {
-	params := url.Values{}
-	params.Add("dish_name", dishName)
-	req, err := http.NewRequestWithContext(ctx, "GET", serviceURL+"?"+params.Encode(), nil)
-	if err != nil {
-		log.Fatal("NewRequest: ", err)
-		return ""
-	}
-
-	client := http.Client{Transport: otelhttp.NewTransport(http.DefaultTransport)}
-	resp, err := client.Do(req)
-	if err != nil {
-		log.Fatal("Do: ", err)
-		return ""
-	}
-	defer resp.Body.Close()
-
-	body, err := io.ReadAll(resp.Body)
-	if err != nil {
-		log.Fatal("ReadAll: ", err)
-		return ""
-	}
-
-	return string(body)
 }

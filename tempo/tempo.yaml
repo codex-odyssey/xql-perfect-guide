@@ -33,6 +33,9 @@ compactor:
     block_retention: 1h # overall Tempo trace retention. set for demo purposes
 
 metrics_generator:
+  # processor:
+    # local_blocks:
+      # filter_server_spans: false
   registry:
     external_labels:
       source: tempo
@@ -42,6 +45,8 @@ metrics_generator:
     remote_write:
       - url: http://prometheus:9090/api/v1/write
         send_exemplars: true
+  traces_storage:
+    path: /tmp/tempo/generator/traces        
 
 storage:
   trace:
@@ -54,4 +59,4 @@ storage:
 overrides:
   defaults:
     metrics_generator:
-      processors: [service-graphs, span-metrics] # enables metrics generator
+      processors: [service-graphs, span-metrics, local-blocks] # enables metrics generator

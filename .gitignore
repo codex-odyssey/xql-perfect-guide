@@ -13,3 +13,10 @@
 /bbb-service/lib/*
 /bbb-service/include/*
 /bbb-service/pyvenv.cfg
+
+# load-generator
+/load-generator/__pycache__/*
+/load-generator/bin/*
+/load-generator/lib/*
+/load-generator/include/*
+/load-generator/pyvenv.cfg
