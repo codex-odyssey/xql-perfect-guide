@@ -33,7 +33,7 @@ func main() {
 	r.Use(
 		func(c *gin.Context) {
 			if !excludePaths[c.Request.URL.Path] {
-				otelgin.Middleware("xql-sample-app")(c)
+				otelgin.Middleware("waiter-service")(c)
 			}
 		},
 		metrics.PrometheusMiddleware(),
