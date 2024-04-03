@@ -1,5 +1,6 @@
 import os
 import mysql.connector
+from pymemcache.client import base
 from logger import setup_logger
 
 logger = setup_logger()
@@ -35,3 +36,27 @@ def get_bbb_evaluation_from_db(dish_name):
         cnx.close()
         
     return bbb_evaluation
+
+# Get BBB Evaluation from Memchached.
+def get_bbb_evaluation_from_cache(key):
+    memcache_host = os.getenv('BBB_SERVICE_MEMCACHE_HOST', 'localhost')
+    memcache_port = int(os.getenv('BBB_SERVICE_MEMCACHE_PORT', 11211))
+
+    client = base.Client((memcache_host, memcache_port))
+    cache = client.get(key)
+    logger.info(f"Cache 取得: {cache}")
+    
+    if cache is None:
+        return None
+    
+    return cache
+
+# Set BBB Evaluation from Memchached ( default expire time = 60 Sec. ).
+def set_bbb_evaluation_to_cache(dish_name, bbb_evaluation):
+    memcache_host = os.getenv('BBB_SERVICE_MEMCACHE_HOST', 'localhost')
+    memcache_port = int(os.getenv('BBB_SERVICE_MEMCACHE_PORT', 11211))
+    expire_time = int(os.getenv('BBB_SERVICE_MEMCACHE_EXPIRE_TIME', 60))
+
+    client = base.Client((memcache_host, memcache_port))
+    client.set(dish_name, bbb_evaluation, expire=expire_time)
+    logger.info(f"Cache 設定 ( TTL: {expire_time} 秒 ): {dish_name}:{bbb_evaluation}")

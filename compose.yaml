@@ -83,6 +83,9 @@ services:
       BBB_SERVICE_DB_HOST: "mysql-bbb-service"
       BBB_SERVICE_DB_NAME: "bbb"
       BBB_SERVICE_DB_PORT: "3306"
+      BBB_SERVICE_MEMCACHE_HOST: "memcached"
+      BBB_SERVICE_MEMCACHE_PORT: "11211"
+      BBB_SERVICE_MEMCACHE_EXPIRE_TIME: "1"      
       OTEL_SERVICE_NAME: bbb-service
       OTEL_TRACES_EXPORTER: otlp
       OTEL_EXPORTER_OTLP_PROTOCOL: grpc
@@ -112,6 +115,13 @@ services:
     volumes:
       - ./bbb-service/assets/init.sql:/docker-entrypoint-initdb.d/init.sql
 
+  memcached:
+    <<: *default_policy  
+    container_name: memcached
+    image: memcached
+    ports:
+      - "11211:11211"
+      
   grafana:
     <<: *default_policy
     container_name: grafana

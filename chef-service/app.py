@@ -6,7 +6,7 @@ from logger import setup_logger
 app = Flask(__name__)
 logger = setup_logger()
 
-# CNDT WESTERN API Main Hander: From Prefecture Name To Population.
+# Chef Service Main Hander: From Dish Name To Time of Cooking.
 @app.route('/chef', methods=['GET'])
 def main():  
         # Get Data
