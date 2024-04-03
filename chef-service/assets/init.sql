@@ -16,4 +16,5 @@ INSERT INTO cooking_time (dish_name, cooking_time) VALUES
 ('salad', 5),
 ('smoothie', 15),
 ('yakitori', 10),
-('yasaiitame', 5);;
+('yasaiitame', 5),
+('yakiniku', 30);
