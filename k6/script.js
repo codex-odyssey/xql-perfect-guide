@@ -9,7 +9,8 @@ const recipes = [
     "sandwich",
     "salad",
     "smoothie",
-    "yakitori"
+    "yakitori",
+    "yasaiitame"
 ]
 
 export const options = {

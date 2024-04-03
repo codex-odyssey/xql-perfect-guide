@@ -51,6 +51,7 @@ func main() {
 	r.GET("/salad", recipe.Salad)
 	r.GET("/smoothie", recipe.Smoothie)
 	r.GET("/yakitori", recipe.Yakitori)
+	r.GET("/yasaiitame", recipe.Yasaiitame)
 
 	r.GET("/metrics", metrics.HandlerMetrics)
 	r.Run(":8080")

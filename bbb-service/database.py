@@ -16,9 +16,13 @@ def get_bbb_evaluation_from_db(dish_name):
         'raise_on_warnings': True,
     }
     
+    # TODO こいつはそのうち消すログ
     logger.info(config)
     
     try: 
+        if dish_name == "yasaiitame":
+            raise ValueError(f"無効な料理名が指定されました: {dish_name}")
+        
         cnx = mysql.connector.connect(**config)
         cursor = cnx.cursor()
 
