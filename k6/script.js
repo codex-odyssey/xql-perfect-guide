@@ -11,6 +11,9 @@ const items = [
     { name: 'sandwich', weight: 1 },
     { name: 'salad', weight: 15 },
     { name: 'smoothie', weight: 6 },
+    { name: 'yakitori', weight: 8 },
+    { name: 'yasaiitame', weight: 3 },
+    { name: 'yakiniku', weight: 1 }
 ]
 
 export const options = {
