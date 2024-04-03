@@ -14,7 +14,7 @@ services:
     environment:
       LOG_LEVEL: info
       APP_VERSION: v1.0.0
-      SERVICE_NAME: WAITER-SERVICE
+      SERVICE_NAME: waiter-service
       TRACE_BACKEND_ADDRESS: otel-collector:4317
     ports:
       - "8080:8080"
@@ -40,7 +40,7 @@ services:
       CHEF_SERVICE_DB_HOST: "mysql-chef-service"
       CHEF_SERVICE_DB_NAME: "chef"
       CHEF_SERVICE_DB_PORT: "3306"
-      OTEL_SERVICE_NAME: CHEF-SERVICE
+      OTEL_SERVICE_NAME: chef-service
       OTEL_TRACES_EXPORTER: otlp
       OTEL_EXPORTER_OTLP_PROTOCOL: grpc
       OTEL_EXPORTER_OTLP_ENDPOINT: otel-collector:4317
@@ -83,7 +83,7 @@ services:
       BBB_SERVICE_DB_HOST: "mysql-bbb-service"
       BBB_SERVICE_DB_NAME: "bbb"
       BBB_SERVICE_DB_PORT: "3306"
-      OTEL_SERVICE_NAME: BBB-SERVICE
+      OTEL_SERVICE_NAME: bbb-service
       OTEL_TRACES_EXPORTER: otlp
       OTEL_EXPORTER_OTLP_PROTOCOL: grpc
       OTEL_EXPORTER_OTLP_ENDPOINT: otel-collector:4317
