@@ -1,17 +1,16 @@
 import http from 'k6/http';
 
-const baseEndpoint = __ENV.BASE_URL || "http://localhost:8080"
-const recipes = [
-    "karubikuppa",
-    "curry",
-    "spaghetti",
-    "meuniere",
-    "sandwich",
-    "salad",
-    "smoothie",
-    "yakitori",
-    "yasaiitame",
-    "yakiniku"
+const baseEndpoint = __ENV.BASE_URL || 'http://localhost:8080'
+
+// List of recipes and weights
+const items = [
+    { name: 'karubikuppa', weight: 20 },
+    { name: 'curry', weight: 7 },
+    { name: 'spaghetti', weight: 5 },
+    { name: 'meuniere', weight: 2 },
+    { name: 'sandwich', weight: 1 },
+    { name: 'salad', weight: 15 },
+    { name: 'smoothie', weight: 6 },
 ]
 
 export const options = {
@@ -24,6 +23,18 @@ export const options = {
 };
 
 export default function () {
-    const recipe = recipes[Math.floor(Math.random() * recipes.length)]
+    const recipe = getRandomItemWeighted(items);
     http.get(`${baseEndpoint}/${recipe}`);
+}
+
+function getRandomItemWeighted(items) {
+    const totalWeight = items.reduce((acc, item) => acc + item.weight, 0);
+    const randomWeight = Math.random() * totalWeight;
+    let cumulativeWeight = 0;
+    for (const item of items) {
+        cumulativeWeight += item.weight;
+        if (randomWeight <= cumulativeWeight) {
+            return item.name;
+        }
+    }
 }
