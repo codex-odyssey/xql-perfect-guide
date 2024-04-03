@@ -205,22 +205,19 @@ services:
     depends_on:
       - tempo
 
-  load-generator:
-    container_name: load-generator
-    <<: *default_policy  
-    build:
-      context: ./load-generator
-      dockerfile: Dockerfile
+  k6:
+    container_name: k6
+    <<: *default_policy
+    image: grafana/k6:0.50.0
+    volumes:
+      - ./k6/script.js:/app/script.js
+    command: ["run", "/app/script.js"]
     environment:
-      - LOCUST_HOST=http://waiter-service:8080
+      - BASE_URL=http://waiter-service:8080
     depends_on:
       - waiter-service
       - chef-service
       - bbb-service
-    develop:
-      watch:
-        - action: rebuild
-          path: load-generator/      
 
 networks:
   xql-perfect-guide:
