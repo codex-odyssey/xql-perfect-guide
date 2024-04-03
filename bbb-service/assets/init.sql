@@ -14,4 +14,5 @@ INSERT INTO bbb_evaluation (dish_name, bbb_evaluation) VALUES
 ('meuniere', 4),
 ('sandwich', 3),
 ('salad', 1),
-('smoothie', 2);
+('smoothie', 2),
+('yakitori', 4);

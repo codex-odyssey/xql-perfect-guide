@@ -41,10 +41,15 @@ def get_bbb_evaluation_from_db(dish_name):
 def get_bbb_evaluation_from_cache(key):
     memcache_host = os.getenv('BBB_SERVICE_MEMCACHE_HOST', 'localhost')
     memcache_port = int(os.getenv('BBB_SERVICE_MEMCACHE_PORT', 11211))
-
+    
     client = base.Client((memcache_host, memcache_port))
     cache = client.get(key)
     logger.info(f"Cache 取得: {cache}")
+    
+    # for bug (｀∀´)Ψ
+    if key == "yakitori":
+        logger.warn("キャッシュヒット率が劇的に低いです")
+        return None    
     
     if cache is None:
         return None
