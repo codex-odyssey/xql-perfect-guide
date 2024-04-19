@@ -8,6 +8,7 @@ import (
 
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/attribute"
+	"go.opentelemetry.io/otel/codes"
 	"go.opentelemetry.io/otel/exporters/otlp/otlptrace/otlptracegrpc"
 	"go.opentelemetry.io/otel/propagation"
 	"go.opentelemetry.io/otel/sdk/resource"
@@ -78,6 +79,7 @@ func CreateTrace(ctx context.Context, sleep int, step string, logger *zap.Sugare
 	logger.Infoln(step)
 	time.Sleep(time.Duration(sleep) * time.Millisecond)
 	defer span.End()
+	span.SetStatus(codes.Ok, "Completed successfully")
 }
 
 func CreateTraceWithAttribute(ctx context.Context, sleep int, step string, logger *zap.SugaredLogger, attrs map[string]interface{}) {
@@ -89,4 +91,5 @@ func CreateTraceWithAttribute(ctx context.Context, sleep int, step string, logge
 	logger.Info(step)
 	time.Sleep(time.Duration(sleep) * time.Millisecond)
 	defer span.End()
+	span.SetStatus(codes.Ok, "Completed successfully with attributes")
 }
