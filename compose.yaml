@@ -135,6 +135,7 @@ services:
       - GF_AUTH_ANONYMOUS_ENABLED=false
       - GF_USERS_DEFAULT_THEME=light
       - GF_INSTALL_PLUGINS=https://storage.googleapis.com/integration-artifacts/grafana-lokiexplore-app/grafana-lokiexplore-app-latest.zip;grafana-lokiexplore-app
+      - GF_FEATURE_TOGGLES_ENABLE=datatrails
     ports:
       - 3000:3000
     depends_on:
