@@ -9,7 +9,7 @@ services:
     # LogQLでcontainerタグにする
     container_name: waiter-service
     build:
-      context: ./service/waiter
+      context: ./service/waiter/
       dockerfile: Dockerfile
     environment:
       LOG_LEVEL: info
@@ -30,7 +30,7 @@ services:
     <<: *default_policy
     container_name: chef-service
     build:
-      context: ./service/chef
+      context: ./service/chef/
       dockerfile: Dockerfile
     environment:
       CHEF_SERIVCE_HOST: "0.0.0.0"
@@ -54,7 +54,7 @@ services:
     develop:
       watch:
         - action: rebuild
-          path: service/chef-service/
+          path: service/chef/
   mysql-chef-service:
     <<: *default_policy
     container_name: mysql-chef-service
@@ -67,26 +67,26 @@ services:
     ports:
       - "3306:3306"
     volumes:
-      - ./service/chef-service/assets/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./service/chef/assets/init.sql:/docker-entrypoint-initdb.d/init.sql
 
-  bb-corp:
+  bb-productions:
     <<: *default_policy
-    container_name: bb-corp
+    container_name: bb-productions
     build:
-      context: ./service/bb-corp
+      context: ./service/bb-productions/
       dockerfile: Dockerfile
     environment:
       BB_CORP_HOST: "0.0.0.0"
       BB_CORP_PORT: 8091
       BB_CORP_DB_USER: ${DB_USER}
       BB_CORP_DB_PASSWORD: ${DB_PASSWORD}
-      BB_CORP_DB_HOST: "mysql-bb-corp"
+      BB_CORP_DB_HOST: "mysql-bb-productions"
       BB_CORP_DB_NAME: "bb"
       BB_CORP_DB_PORT: "3306"
       BB_CORP_MEMCACHE_HOST: "memcached"
       BB_CORP_MEMCACHE_PORT: "11211"
       BB_CORP_MEMCACHE_EXPIRE_TIME: "5"
-      OTEL_SERVICE_NAME: bb-corp
+      OTEL_SERVICE_NAME: bb-productions
       OTEL_TRACES_EXPORTER: otlp
       OTEL_EXPORTER_OTLP_PROTOCOL: grpc
       OTEL_EXPORTER_OTLP_ENDPOINT: otel-collector:4317
@@ -96,14 +96,14 @@ services:
     depends_on:
       - tempo
       - otel-collector
-      - mysql-bb-corp
+      - mysql-bb-productions
     develop:
       watch:
         - action: rebuild
-          path: service/bb-corp/
-  mysql-bb-corp:
+          path: service/bb-productions/
+  mysql-bb-productions:
     <<: *default_policy
-    container_name: mysql-bb-corp
+    container_name: mysql-bb-productions
     image: mysql:8.0
     environment:
       MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
@@ -113,7 +113,7 @@ services:
     ports:
       - "3307:3306"
     volumes:
-      - ./service/bb-corp/assets/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./service/bb-productions/assets/init.sql:/docker-entrypoint-initdb.d/init.sql
 
   memcached:
     <<: *default_policy
@@ -233,7 +233,7 @@ services:
     depends_on:
       - waiter-service
       - chef-service
-      - bb-corp
+      - bb-productions
 
 networks:
   xql-perfect-guide:
