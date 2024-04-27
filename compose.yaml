@@ -9,7 +9,7 @@ services:
     # LogQLでcontainerタグにする
     container_name: waiter-service
     build:
-      context: ./app
+      context: ./service/waiter
       dockerfile: Dockerfile
     environment:
       LOG_LEVEL: info
@@ -30,13 +30,13 @@ services:
     <<: *default_policy
     container_name: chef-service
     build:
-      context: ./chef-service
+      context: ./service/chef
       dockerfile: Dockerfile
     environment:
       CHEF_SERIVCE_HOST: "0.0.0.0"
       CHEF_SERIVCE_PORT: 8090
-      CHEF_SERVICE_DB_USER: "root"
-      CHEF_SERVICE_DB_PASSWORD: "password"
+      CHEF_SERVICE_DB_USER: ${DB_USER}
+      CHEF_SERVICE_DB_PASSWORD: ${DB_PASSWORD}
       CHEF_SERVICE_DB_HOST: "mysql-chef-service"
       CHEF_SERVICE_DB_NAME: "chef"
       CHEF_SERVICE_DB_PORT: "3306"
@@ -60,10 +60,10 @@ services:
     container_name: mysql-chef-service
     image: mysql:8.0
     environment:
-      MYSQL_ROOT_PASSWORD: password
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
       MYSQL_DATABASE: chef
       MYSQL_USER: chef
-      MYSQL_PASSWORD: password
+      MYSQL_PASSWORD: ${DB_PASSWORD}
     ports:
       - "3306:3306"
     volumes:
@@ -73,13 +73,13 @@ services:
     <<: *default_policy
     container_name: bbb-service
     build:
-      context: ./bbb-service
+      context: ./service/bb-production
       dockerfile: Dockerfile
     environment:
       BBB_SERIVCE_HOST: "0.0.0.0"
       BBB_SERIVCE_PORT: 8091
-      BBB_SERVICE_DB_USER: "root"
-      BBB_SERVICE_DB_PASSWORD: "password"
+      BBB_SERVICE_DB_USER: ${DB_USER}
+      BBB_SERVICE_DB_PASSWORD: ${DB_PASSWORD}
       BBB_SERVICE_DB_HOST: "mysql-bbb-service"
       BBB_SERVICE_DB_NAME: "bbb"
       BBB_SERVICE_DB_PORT: "3306"
@@ -106,10 +106,10 @@ services:
     container_name: mysql-bbb-service
     image: mysql:8.0
     environment:
-      MYSQL_ROOT_PASSWORD: password
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
       MYSQL_DATABASE: bbb
       MYSQL_USER: bbb
-      MYSQL_PASSWORD: password
+      MYSQL_PASSWORD: ${DB_PASSWORD}
     ports:
       - "3307:3306"
     volumes:
