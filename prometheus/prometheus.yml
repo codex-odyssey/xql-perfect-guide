@@ -27,5 +27,4 @@ scrape_configs:
     scheme: http
     static_configs:
       - targets:
-          - app:8080
-
+          - waiter-service:8080
