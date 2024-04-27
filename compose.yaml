@@ -33,6 +33,10 @@ services:
       context: ./service/chef/
       dockerfile: Dockerfile
     environment:
+      LOG_LEVEL: info
+      APP_VERSION: v1.0.0
+      SERVICE_NAME: chef-service
+      TRACE_BACKEND_ADDRESS: otel-collector:4317
       CHEF_SERIVCE_HOST: "0.0.0.0"
       CHEF_SERIVCE_PORT: 8090
       CHEF_SERVICE_DB_USER: ${DB_USER}
@@ -76,16 +80,16 @@ services:
       context: ./service/bb-productions/
       dockerfile: Dockerfile
     environment:
-      BB_CORP_HOST: "0.0.0.0"
-      BB_CORP_PORT: 8091
-      BB_CORP_DB_USER: ${DB_USER}
-      BB_CORP_DB_PASSWORD: ${DB_PASSWORD}
-      BB_CORP_DB_HOST: "mysql-bb-productions"
-      BB_CORP_DB_NAME: "bb"
-      BB_CORP_DB_PORT: "3306"
-      BB_CORP_MEMCACHE_HOST: "memcached"
-      BB_CORP_MEMCACHE_PORT: "11211"
-      BB_CORP_MEMCACHE_EXPIRE_TIME: "5"
+      BB_PROD_HOST: "0.0.0.0"
+      BB_PROD_PORT: 8091
+      BB_PROD_DB_USER: ${DB_USER}
+      BB_PROD_DB_PASSWORD: ${DB_PASSWORD}
+      BB_PROD_DB_HOST: "mysql-bb-productions"
+      BB_PROD_DB_NAME: "bb"
+      BB_PROD_DB_PORT: "3306"
+      BB_PROD_MEMCACHE_HOST: "memcached"
+      BB_PROD_MEMCACHE_PORT: "11211"
+      BB_PROD_MEMCACHE_EXPIRE_TIME: "5"
       OTEL_SERVICE_NAME: bb-productions
       OTEL_TRACES_EXPORTER: otlp
       OTEL_EXPORTER_OTLP_PROTOCOL: grpc

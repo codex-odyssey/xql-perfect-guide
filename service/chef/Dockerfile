@@ -1,16 +1,18 @@
-# Pythonのベースイメージを使用
-FROM python:3.11
+FROM golang:1.22-alpine AS builder
+WORKDIR /app
 
-# 作業ディレクトリを設定
-WORKDIR /usr/src/app
+COPY --link go.mod go.sum ./
+RUN --mount=type=cache,target=/go/pkg/mod \
+    --mount=type=cache,target=/root/.cache/go-build \
+    go mod download
 
-# 必要なライブラリをインストール
-COPY requirements.txt ./
-RUN pip install --no-cache-dir -r requirements.txt
-RUN opentelemetry-bootstrap -a install
+COPY --link . .
+RUN --mount=type=cache,target=/go/pkg/mod \
+    --mount=type=cache,target=/root/.cache/go-build \
+    CGO_ENABLED=0 GOOS=linux go build -o chef
 
-# アプリケーションのコードをコピー
-COPY . .
-
-# Flaskアプリケーションを実行
-CMD ["opentelemetry-instrument", "python", "app.py"]
+FROM alpine:3.18
+RUN apk --no-cache add ca-certificates
+WORKDIR /wd/
+COPY --link --from=builder /app/chef .
+CMD ["./chef"]

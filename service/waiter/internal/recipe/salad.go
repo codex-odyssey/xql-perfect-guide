@@ -3,6 +3,7 @@ package recipe
 import (
 	"fmt"
 	"net/http"
+	"time"
 
 	"github.com/gin-gonic/gin"
 
@@ -20,13 +21,15 @@ func Salad(c *gin.Context) {
 	tracing.CreateTrace(ctx, 100, "食材を切る", logger)
 	tracing.CreateTrace(ctx, 10, "ドレッシングをかける", logger)
 
-	chefResponse := utils.SendRequest(ctx, utils.ChefServiceURL, name)
-	bbbResponse := utils.SendRequest(ctx, utils.BBCorpURL, name)
+	now := time.Now()
 
+	bbbResponse := utils.SendRequest(ctx, utils.GetBBBProdURL(name))
+
+	delta := time.Since(now).Microseconds()
 	logger.With(
-		"cooking_time", fmt.Sprintf("%sm", chefResponse),
-		"BBs_rating", bbbResponse,
+		"調理時間", fmt.Sprintf("%dm", delta),
+		"BBB流評価", bbbResponse,
 	).Info("情報収集完了")
 
-	c.String(http.StatusOK, "約 "+string(chefResponse)+" 分で完成します。BB流評価は星"+string(bbbResponse)+"です。")
+	c.String(http.StatusOK, "完成します。BB流評価は星"+string(bbbResponse)+"です。")
 }
