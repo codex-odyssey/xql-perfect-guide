@@ -6,7 +6,7 @@ from logger import setup_logger
 app = Flask(__name__)
 logger = setup_logger()
 
-# BB Corp!!!
+# BB Productions!!!
 
 # rate
 @app.route('/rate', methods=['GET'])
@@ -30,5 +30,5 @@ def main():
         return bb_rating
 
 if __name__ == '__main__':
-    host, port = os.getenv('BB_CORP_HOST', '0.0.0.0'), os.getenv('BB_CORP_PORT', 8091)
+    host, port = os.getenv('BB_PROD_HOST', '0.0.0.0'), os.getenv('BB_PROD_PORT', 8091)
     app.run(host=host, port=port)

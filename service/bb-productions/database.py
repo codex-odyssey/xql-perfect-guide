@@ -8,11 +8,11 @@ logger = setup_logger()
 # Get BB Evaluation from MySQL.
 def get_bb_rating_from_db(dish_name):
     config = {
-        'user': os.getenv('BB_CORP_DB_USER', 'bb'),
-        'password': os.getenv('BB_CORP_DB_PASSWORD', 'password'),
-        'host': os.getenv('BB_CORP_DB_HOST', '127.0.0.1'),
-        'database': os.getenv('BB_CORP_DB_NAME', 'bb'),
-        'port': int(os.getenv('BB_CORP_DB_PORT', '3306')),
+        'user': os.getenv('BB_PROD_DB_USER', 'bb'),
+        'password': os.getenv('BB_PROD_DB_PASSWORD', 'password'),
+        'host': os.getenv('BB_PROD_DB_HOST', '127.0.0.1'),
+        'database': os.getenv('BB_PROD_DB_NAME', 'bb'),
+        'port': int(os.getenv('BB_PROD_DB_PORT', '3306')),
         'raise_on_warnings': True,
     }
 
@@ -43,8 +43,8 @@ def get_bb_rating_from_db(dish_name):
 
 # Get BB Evaluation from Memchached.
 def get_bb_rating_from_cache(key):
-    memcache_host = os.getenv('BB_CORP_MEMCACHE_HOST', 'localhost')
-    memcache_port = int(os.getenv('BB_CORP_MEMCACHE_PORT', 11211))
+    memcache_host = os.getenv('BB_PROD_MEMCACHE_HOST', 'localhost')
+    memcache_port = int(os.getenv('BB_PROD_MEMCACHE_PORT', 11211))
 
     client = base.Client((memcache_host, memcache_port))
     cache = client.get(key)
@@ -62,9 +62,9 @@ def get_bb_rating_from_cache(key):
 
 # Set BB Evaluation from Memchached ( default expire time = 60 Sec. ).
 def set_bb_rating_to_cache(dish_name, bb_rating):
-    memcache_host = os.getenv('BB_CORP_MEMCACHE_HOST', 'localhost')
-    memcache_port = int(os.getenv('BB_CORP_MEMCACHE_PORT', 11211))
-    expire_time = int(os.getenv('BB_CORP_MEMCACHE_EXPIRE_TIME', 60))
+    memcache_host = os.getenv('BB_PROD_MEMCACHE_HOST', 'localhost')
+    memcache_port = int(os.getenv('BB_PROD_MEMCACHE_PORT', 11211))
+    expire_time = int(os.getenv('BB_PROD_MEMCACHE_EXPIRE_TIME', 60))
 
     client = base.Client((memcache_host, memcache_port))
     client.set(dish_name, bb_rating, expire=expire_time)
