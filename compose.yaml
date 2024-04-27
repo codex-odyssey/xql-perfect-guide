@@ -24,7 +24,7 @@ services:
     develop:
       watch:
         - action: rebuild
-          path: app/
+          path: service/waiter
 
   chef-service:
     <<: *default_policy
@@ -54,7 +54,7 @@ services:
     develop:
       watch:
         - action: rebuild
-          path: chef-service/
+          path: service/chef-service/
   mysql-chef-service:
     <<: *default_policy
     container_name: mysql-chef-service
@@ -67,13 +67,13 @@ services:
     ports:
       - "3306:3306"
     volumes:
-      - ./chef-service/assets/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./service/chef-service/assets/init.sql:/docker-entrypoint-initdb.d/init.sql
 
   bb-corp:
     <<: *default_policy
     container_name: bb-corp
     build:
-      context: ./service/bb-production
+      context: ./service/bb-corp
       dockerfile: Dockerfile
     environment:
       BB_CORP_HOST: "0.0.0.0"
@@ -100,7 +100,7 @@ services:
     develop:
       watch:
         - action: rebuild
-          path: bb-corp/
+          path: service/bb-corp/
   mysql-bb-corp:
     <<: *default_policy
     container_name: mysql-bb-corp
@@ -113,7 +113,7 @@ services:
     ports:
       - "3307:3306"
     volumes:
-      - ./bb-corp/assets/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./service/bb-corp/assets/init.sql:/docker-entrypoint-initdb.d/init.sql
 
   memcached:
     <<: *default_policy
