@@ -5,7 +5,7 @@ from logger import setup_logger
 logger = setup_logger()
 
 # Get Cooking Time from MySQL.
-def get_cooking_time_from_db(dish_name): 
+def get_cooking_time_from_db(dish_name):
     config = {
         'user': os.getenv('CHEF_SERVICE_DB_USER', 'chef'),
         'password': os.getenv('CHEF_SERVICE_DB_PASSWORD', 'password'),
@@ -14,18 +14,18 @@ def get_cooking_time_from_db(dish_name):
         'port': int(os.getenv('CHEF_SERVICE_DB_PORT', '3306')),
         'raise_on_warnings': True,
     }
-    
+
     logger.info(config)
-    
-    try: 
+
+    try:
         cnx = mysql.connector.connect(**config)
         cursor = cnx.cursor()
 
         query = "SELECT cooking_time FROM cooking_time WHERE dish_name = %s"
-        cursor.execute(query, (dish_name,))    
-        
+        cursor.execute(query, (dish_name,))
+
         result = cursor.fetchone()
-        
+
         cooking_time = str(result[0]) if result else "Not Found"
         logger.info(f"DB からデータ取得: {dish_name} の調理時間 {cooking_time} [min.]")
     except Exception as e:
@@ -33,5 +33,5 @@ def get_cooking_time_from_db(dish_name):
     finally:
         cursor.close()
         cnx.close()
-        
+
     return cooking_time

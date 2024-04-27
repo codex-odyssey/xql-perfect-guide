@@ -23,7 +23,7 @@ func Curry(c *gin.Context) {
 	tracing.CreateTrace(ctx, 2000, "煮込む", logger)
 
 	chefResponse := utils.SendRequest(ctx, utils.ChefServiceURL, name)
-	bbbResponse := utils.SendRequest(ctx, utils.BBBServiceURL, name)
+	bbbResponse := utils.SendRequest(ctx, utils.BBCorpURL, name)
 
-	c.String(http.StatusOK, "約 "+string(chefResponse)+" 分で完成します。BBB流評価は星"+string(bbbResponse)+"です。")
+	c.String(http.StatusOK, "約 "+string(chefResponse)+" 分で完成します。BB流評価は星"+string(bbbResponse)+"です。")
 }
