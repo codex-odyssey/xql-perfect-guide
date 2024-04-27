@@ -9,10 +9,10 @@ RUN --mount=type=cache,target=/go/pkg/mod \
 COPY --link . .
 RUN --mount=type=cache,target=/go/pkg/mod \
     --mount=type=cache,target=/root/.cache/go-build \
-    CGO_ENABLED=0 GOOS=linux go build -o xql-sample-app
+    CGO_ENABLED=0 GOOS=linux go build -o waiter
 
 FROM alpine:3.18
 RUN apk --no-cache add ca-certificates
 WORKDIR /wd/
-COPY --link --from=builder /app/xql-sample-app .
-CMD ["./xql-sample-app"]
+COPY --link --from=builder /app/waiter .
+CMD ["./waiter"]
