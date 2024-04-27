@@ -69,24 +69,24 @@ services:
     volumes:
       - ./chef-service/assets/init.sql:/docker-entrypoint-initdb.d/init.sql
 
-  bbb-service:
+  bb-corp:
     <<: *default_policy
-    container_name: bbb-service
+    container_name: bb-corp
     build:
       context: ./service/bb-production
       dockerfile: Dockerfile
     environment:
-      BBB_SERIVCE_HOST: "0.0.0.0"
-      BBB_SERIVCE_PORT: 8091
-      BBB_SERVICE_DB_USER: ${DB_USER}
-      BBB_SERVICE_DB_PASSWORD: ${DB_PASSWORD}
-      BBB_SERVICE_DB_HOST: "mysql-bbb-service"
-      BBB_SERVICE_DB_NAME: "bbb"
-      BBB_SERVICE_DB_PORT: "3306"
-      BBB_SERVICE_MEMCACHE_HOST: "memcached"
-      BBB_SERVICE_MEMCACHE_PORT: "11211"
-      BBB_SERVICE_MEMCACHE_EXPIRE_TIME: "5"
-      OTEL_SERVICE_NAME: bbb-service
+      BB_CORP_HOST: "0.0.0.0"
+      BB_CORP_PORT: 8091
+      BB_CORP_DB_USER: ${DB_USER}
+      BB_CORP_DB_PASSWORD: ${DB_PASSWORD}
+      BB_CORP_DB_HOST: "mysql-bb-corp"
+      BB_CORP_DB_NAME: "bb"
+      BB_CORP_DB_PORT: "3306"
+      BB_CORP_MEMCACHE_HOST: "memcached"
+      BB_CORP_MEMCACHE_PORT: "11211"
+      BB_CORP_MEMCACHE_EXPIRE_TIME: "5"
+      OTEL_SERVICE_NAME: bb-corp
       OTEL_TRACES_EXPORTER: otlp
       OTEL_EXPORTER_OTLP_PROTOCOL: grpc
       OTEL_EXPORTER_OTLP_ENDPOINT: otel-collector:4317
@@ -96,24 +96,24 @@ services:
     depends_on:
       - tempo
       - otel-collector
-      - mysql-bbb-service
+      - mysql-bb-corp
     develop:
       watch:
         - action: rebuild
-          path: bbb-service/
-  mysql-bbb-service:
+          path: bb-corp/
+  mysql-bb-corp:
     <<: *default_policy
-    container_name: mysql-bbb-service
+    container_name: mysql-bb-corp
     image: mysql:8.0
     environment:
       MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
-      MYSQL_DATABASE: bbb
-      MYSQL_USER: bbb
+      MYSQL_DATABASE: bb
+      MYSQL_USER: bb
       MYSQL_PASSWORD: ${DB_PASSWORD}
     ports:
       - "3307:3306"
     volumes:
-      - ./bbb-service/assets/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./bb-corp/assets/init.sql:/docker-entrypoint-initdb.d/init.sql
 
   memcached:
     <<: *default_policy
@@ -233,7 +233,7 @@ services:
     depends_on:
       - waiter-service
       - chef-service
-      - bbb-service
+      - bb-corp
 
 networks:
   xql-perfect-guide:

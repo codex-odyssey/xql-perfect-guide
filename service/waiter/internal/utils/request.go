@@ -12,7 +12,7 @@ import (
 
 const (
 	ChefServiceURL = "http://chef-service:8090/chef"
-	BBBServiceURL  = "http://bbb-service:8091/bbb"
+	BBCorpURL  = "http://bb-corp:8091/rate"
 )
 
 func SendRequest(ctx context.Context, serviceURL string, dishName string) string {

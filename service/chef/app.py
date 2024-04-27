@@ -8,16 +8,16 @@ logger = setup_logger()
 
 # Chef Service Main Hander: From Dish Name To Time of Cooking.
 @app.route('/chef', methods=['GET'])
-def main():  
+def main():
         # Get Data
         dish_name = request.args.get('dish_name')
         logger.info(f"リクエスト受信: {dish_name}")
-        
+
         # Query DB ( MySQL ).
         cooking_time = get_cooking_time_from_db(dish_name)
 
         return cooking_time
 
 if __name__ == '__main__':
-    host, port = os.getenv('CHEF_SERVICE_HOST', '0.0.0.0'), os.getenv('CHEF_SERIVCE_PORT', 8090)
-    app.run(host=host, port=port)
+        host, port = os.getenv('CHEF_SERVICE_HOST', '0.0.0.0'), os.getenv('CHEF_SERIVCE_PORT', 8090)
+        app.run(host=host, port=port)
