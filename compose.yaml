@@ -39,11 +39,6 @@ services:
       TRACE_BACKEND_ADDRESS: otel-collector:4317
       CHEF_SERIVCE_HOST: "0.0.0.0"
       CHEF_SERIVCE_PORT: 8090
-      CHEF_SERVICE_DB_USER: ${DB_USER}
-      CHEF_SERVICE_DB_PASSWORD: ${DB_PASSWORD}
-      CHEF_SERVICE_DB_HOST: "mysql-chef-service"
-      CHEF_SERVICE_DB_NAME: "chef"
-      CHEF_SERVICE_DB_PORT: "3306"
       OTEL_SERVICE_NAME: chef-service
       OTEL_TRACES_EXPORTER: otlp
       OTEL_EXPORTER_OTLP_PROTOCOL: grpc
@@ -54,24 +49,10 @@ services:
     depends_on:
       - tempo
       - otel-collector
-      - mysql-chef-service
     develop:
       watch:
         - action: rebuild
           path: service/chef/
-  mysql-chef-service:
-    <<: *default_policy
-    container_name: mysql-chef-service
-    image: mysql:8.0
-    environment:
-      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
-      MYSQL_DATABASE: chef
-      MYSQL_USER: chef
-      MYSQL_PASSWORD: ${DB_PASSWORD}
-    ports:
-      - "3306:3306"
-    volumes:
-      - ./service/chef/assets/init.sql:/docker-entrypoint-initdb.d/init.sql
 
   bb-productions:
     <<: *default_policy
