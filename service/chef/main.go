@@ -41,7 +41,16 @@ func main() {
 	r.GET("/", Handler)
 
 	// === Recipe
+
+	r.GET("/curry", recipe.Curry)
 	r.GET("/karubikuppa", recipe.Karubikuppa)
+	r.GET("/salad", recipe.Salad)
+	r.GET("/sandwich", recipe.Sandwich)
+	r.GET("/sandwich", recipe.Smoothie)
+	r.GET("/spaghetto", recipe.Spaghetti)
+	r.GET("/yakiniku", recipe.Yakiniku)
+	r.GET("/yakitori", recipe.Yakitori)
+	r.GET("/yasaiitame", recipe.Yasaiitame)
 
 	r.GET("/metrics", metrics.HandlerMetrics)
 	r.Run(":8090")
