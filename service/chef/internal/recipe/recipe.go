@@ -22,3 +22,11 @@ func transitionTo(logger *zap.SugaredLogger, state, tips string) {
 		"tips", tips,
 	).Info("状態が遷移")
 }
+
+func doCookAction(logger *zap.SugaredLogger, material, action, tips string) {
+	logger.With(
+		"material", material,
+		"action", action,
+		"tips", tips,
+	).Info("調理")
+}

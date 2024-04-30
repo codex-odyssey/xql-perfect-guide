@@ -8,7 +8,6 @@ import (
 	"github.com/gin-gonic/gin"
 
 	logging "app/internal/log"
-	tracing "app/internal/trace"
 	"app/internal/utils"
 )
 
@@ -17,12 +16,9 @@ func Salad(c *gin.Context) {
 	ctx := c.Request.Context()
 	logger := logging.GetLoggerWithTraceID(ctx)
 
-	tracing.CreateTrace(ctx, 100, "食材の準備", logger)
-	tracing.CreateTrace(ctx, 100, "食材を切る", logger)
-	tracing.CreateTrace(ctx, 10, "ドレッシングをかける", logger)
-
 	now := time.Now()
 
+	_ = utils.SendRequest(ctx, utils.GetChefServiceURL(name))
 	bbbResponse := utils.SendRequest(ctx, utils.GetBBBProdURL(name))
 
 	delta := time.Since(now).Microseconds()
