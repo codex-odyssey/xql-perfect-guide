@@ -1,3 +1,4 @@
+import { sleep } from 'k6';
 import http from 'k6/http';
 
 const baseEndpoint = __ENV.BASE_URL || 'http://localhost:8080'
@@ -27,6 +28,7 @@ export const options = {
 
 export default function () {
     const recipe = getRandomItemWeighted(items);
+    sleep(1)
     http.get(`${baseEndpoint}/${recipe}`);
 }
 
