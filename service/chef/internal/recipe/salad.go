@@ -34,7 +34,7 @@ func Salad(c *gin.Context) {
 		useMaterials(logger, "白ワインビネガー", "cc", "15", "")
 		useMaterials(logger, "オリーブオイル", "cc", "15", "")
 		useMaterials(logger, "塩", "cc", "15", "")
-		useMaterials(logger, "レモン汁", "cc", "15", "")
+		useMaterials(logger, "レモン汁", "cc", "5", "")
 
 		doCookAction(logger, "撹拌", "", "頑張って乳化させる")
 
