@@ -46,7 +46,7 @@ func main() {
 	r.GET("/karubikuppa", recipe.Karubikuppa)
 	r.GET("/salad", recipe.Salad)
 	r.GET("/sandwich", recipe.Sandwich)
-	r.GET("/sandwich", recipe.Smoothie)
+	r.GET("/smoothie", recipe.Smoothie)
 	r.GET("/spaghetto", recipe.Spaghetti)
 	r.GET("/yakiniku", recipe.Yakiniku)
 	r.GET("/yakitori", recipe.Yakitori)
