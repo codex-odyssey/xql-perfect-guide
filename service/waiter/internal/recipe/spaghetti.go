@@ -23,8 +23,8 @@ func Spaghetti(c *gin.Context) {
 
 	delta := time.Since(now).Microseconds()
 	logger.With(
-		"調理時間", fmt.Sprintf("%dm", delta),
-		"BBB流評価", bbbResponse,
+		"cooking_time", fmt.Sprintf("%dm", delta),
+		"bb_rating", bbbResponse,
 	).Info("情報収集完了")
 
 	c.String(http.StatusOK, "完成します。BB流評価は星"+string(bbbResponse)+"です。")
