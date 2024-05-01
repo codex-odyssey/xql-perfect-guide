@@ -154,6 +154,14 @@ services:
       - 3100:3100
       - 7946
       - 9095
+  logcli:
+    container_name: lobcli
+    image: grafana/logcli:3.0.0
+    environment:
+      LOKI_ADDR: http://loki:3100
+      LOKI_ORG_ID: tenant1
+    networks:
+      - xql-perfect-guide
   promtail:
     <<: *default_policy
     container_name: promtail
