@@ -112,6 +112,8 @@ services:
     container_name: grafana
     image: grafana/grafana:11.0.0-preview
     volumes:
+      - ./grafana/dashboards:/var/lib/grafana/dashboards
+      - ./grafana/dashboard.yaml:/etc/grafana/provisioning/dashboards/main.yaml
       - ./grafana/datasources:/etc/grafana/provisioning/datasources
       - ./grafana/plugins:/etc/grafana/provisioning/plugins
     environment:
