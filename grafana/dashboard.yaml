@@ -1,0 +1,13 @@
+apiVersion: 1
+
+providers:
+  # see: https://grafana.com/docs/grafana/latest/administration/provisioning/#dashboards
+  - name: "Dashboard provider"
+    orgId: 1
+    type: file
+    disableDeletion: true
+    updateIntervalSeconds: 10
+    allowUiUpdates: true
+    options:
+      path: /var/lib/grafana/dashboards
+      foldersFromFilesStructure: true
