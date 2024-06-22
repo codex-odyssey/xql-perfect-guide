@@ -1,6 +1,6 @@
 # 『俺たちのxQL完全ガイド - PromQL / LogQL / TraceQL 編 -』のリポジトリ
 
-この度は『俺たちのxQL完全ガイド - PromQL / LogQL / TraceQL 編 -』をお読みいただき、誠にありがとうございます。
+この度は『[俺たちのxQL完全ガイド - PromQL / LogQL / TraceQL 編 -](https://techbookfest.org/product/vwEgK9fAmzRphNukv4E83P)』をお読みいただき、誠にありがとうございます。
 （また、本リポジトリにStarをつけていただけると、大変嬉しいです。）
 
 ## 環境構築
